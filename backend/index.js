@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import "dotenv/config";
 import authRoutes from "./src/routes/auth.routes.js";
+import profileRoutes from "./src/routes/profile.routes.js";
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(
@@ -14,6 +15,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use("/auth", authRoutes);
+app.use("/profile", profileRoutes);
 app.get("/", (req, res) => {
   res.send("Backend Running");
 });
