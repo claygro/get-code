@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import connection from "../../config/connection.config";
-
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
@@ -17,7 +18,12 @@ const Signup = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("userLoggedIn");
+    if (isLoggedIn && JSON.parse(isLoggedIn) === true) {
+      navigate("/home");
+    }
+  });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -34,6 +40,8 @@ const Signup = () => {
         email: "",
         password: "",
       });
+      localStorage.setItem("userLoggedIn", JSON.stringify(true));
+      navigate("/home");
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Something went wrong.");
     } finally {

@@ -32,7 +32,7 @@ class AuthControllers {
         password: hashedPassword,
       });
 
-      generateAccessToken(user);
+      const accessToken = generateAccessToken(user);
 
       res.cookie("token", accessToken, {
         httpOnly: true,
