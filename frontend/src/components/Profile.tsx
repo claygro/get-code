@@ -7,6 +7,11 @@ const Profile = () => {
     email: string;
   }
   const [profile, setProfile] = useState<Profile>();
+  const [updatedProfile, setUpdatedProfile] = useState({
+    userName: "",
+    email: "",
+  });
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
   async function getProfile() {
     try {
       const data = await connection.get("/profile/getProfile");
@@ -20,6 +25,25 @@ const Profile = () => {
   useEffect(() => {
     getProfile();
   }, []);
+  //edit profile
+  const handleChange = (e: any) => {
+    setUpdatedProfile((prev: any) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const handleUpdateProfile = async () => {
+    try {
+      console.log(updatedProfile);
+      await connection.put("/profile/updateProfile", updatedProfile);
+
+      getProfile();
+      setIsUpdate(false);
+    } catch (error: any) {
+      console.log(`Failed to update profile: ${error.message}`);
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
@@ -38,28 +62,71 @@ const Profile = () => {
           </div>
 
           {/* Profile Info */}
-          <div className="mt-8 space-y-4">
-            <div className="border rounded-xl p-4">
-              <p className="text-sm text-gray-500">Username</p>
-              <p className="text-lg font-medium text-gray-800">
-                {profile?.userName}
-              </p>
-            </div>
+          {isUpdate ? (
+            <div className="mt-8 space-y-4">
+              <div className="border rounded-xl p-4">
+                <p className="text-sm text-gray-500">Username</p>
+                <p className="text-lg font-medium text-gray-800">
+                  <input
+                    value={updatedProfile.userName}
+                    onChange={handleChange}
+                    name="userName"
+                    type="text"
+                    placeholder="Enter userName"
+                    className="w-full h-auto outline-none"
+                  />
+                </p>
+              </div>
 
-            <div className="border rounded-xl p-4">
-              <p className="text-sm text-gray-500">Email Address</p>
-              <p className="text-lg font-medium text-gray-800">
-                {profile?.email}
-              </p>
+              <div className="border rounded-xl p-4">
+                <p className="text-sm text-gray-500">Email Address</p>
+                <p className="text-lg font-medium text-gray-800">
+                  <input
+                    value={updatedProfile.email}
+                    onChange={handleChange}
+                    name="email"
+                    type="email"
+                    placeholder="Enter email"
+                    className="w-full h-auto outline-none"
+                  />
+                </p>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="mt-8 space-y-4">
+              <div className="border rounded-xl p-4">
+                <p className="text-sm text-gray-500">Username</p>
+                <p className="text-lg font-medium text-gray-800">
+                  {profile?.userName}
+                </p>
+              </div>
+
+              <div className="border rounded-xl p-4">
+                <p className="text-sm text-gray-500">Email Address</p>
+                <p className="text-lg font-medium text-gray-800">
+                  {profile?.email}
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Buttons */}
           <div className="mt-8 flex gap-4">
-            <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition">
-              Edit Profile
-            </button>
-
+            {isUpdate ? (
+              <button
+                onClick={handleUpdateProfile}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition"
+              >
+                update Profile
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsUpdate(true)}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition"
+              >
+                Edit Profile
+              </button>
+            )}
             <button className="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition">
               Sign Out
             </button>
