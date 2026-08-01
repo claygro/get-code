@@ -21,7 +21,7 @@ const Signup = () => {
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("userLoggedIn");
     if (isLoggedIn && JSON.parse(isLoggedIn) === true) {
-      navigate("/home");
+      navigate("/layout");
     }
   });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,7 +41,7 @@ const Signup = () => {
         password: "",
       });
       localStorage.setItem("userLoggedIn", JSON.stringify(true));
-      navigate("/home");
+      navigate("/layout");
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Something went wrong.");
     } finally {
