@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import authRoutes from "./src/routes/auth.routes.js";
 import profileRoutes from "./src/routes/profile.routes.js";
+import snipptsRoutes from "./src/routes/snippts.routes.js";
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
+app.use("/snippts", snipptsRoutes);
 app.get("/", (req, res) => {
   res.send("Backend Running");
 });
