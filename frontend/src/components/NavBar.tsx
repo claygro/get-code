@@ -34,7 +34,7 @@ const NavBar = () => {
             Upload
           </NavLink>
 
-          <NavLink to="/profile" className={linkStyle}>
+          <NavLink to="/layout/profile" className={linkStyle}>
             Profile
           </NavLink>
         </div>
@@ -69,7 +69,7 @@ const NavBar = () => {
             </NavLink>
 
             <NavLink
-              to="/profile"
+              to="/layout/profile"
               className={linkStyle}
               onClick={() => setOpen(false)}
             >

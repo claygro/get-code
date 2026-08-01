@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import LayOut from "./components/LayOut";
 import Upload from "./components/Upload";
+import Profile from "./components/Profile";
 function App() {
   return (
     <>
@@ -13,6 +14,7 @@ function App() {
           <Route path="/layout" element={<LayOut />}>
             <Route index element={<Home />} />
             <Route path="upload" element={<Upload />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
         </Routes>
       </Router>
