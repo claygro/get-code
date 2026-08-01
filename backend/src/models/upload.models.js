@@ -5,6 +5,7 @@ const uploadSchema = new mongoose.Schema(
     title: String,
     code: String,
     description: String,
+    language: String,
   },
   { timestamps: true },
 );

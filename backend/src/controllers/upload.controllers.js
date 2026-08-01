@@ -1,4 +1,5 @@
 import UploadModel from "../models/upload.models.js";
+
 class UploadControllers {
   async upload(req, res) {
     const userId = req.user.id;
