@@ -1,19 +1,14 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import authModel from "../models/auth.models.js";
+import { generateAccessToken } from "../utils/generateToken.js";
 
 class ProfileControllers {
   async getProfile(req, res) {
-    const token = req.cookies.token;
+    const userId = req.user.id;
 
     try {
-      if (!token) {
-        return res
-          .status(404)
-          .json({ message: "Please loggedin or signup first." });
-      }
-      const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      const user = await authModel.findById({ _id: decode.id });
+      const user = await authModel.findById({ _id: userId });
       if (!user) {
         return res.status(404).json({ message: "user not found" });
       }
@@ -37,6 +32,13 @@ class ProfileControllers {
         },
         { returnDocument: "after", runValidators: true },
       );
+
+      const accessToken = generateAccessToken(updatedProfile);
+      res.cookie("token", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
       res.status(200).json({ message: "Successfully updated profile" });
     } catch (error) {
       res

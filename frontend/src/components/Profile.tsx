@@ -68,7 +68,7 @@ const Profile = () => {
                 <p className="text-sm text-gray-500">Username</p>
                 <p className="text-lg font-medium text-gray-800">
                   <input
-                    value={updatedProfile.userName}
+                    value={updatedProfile.userName || profile?.userName}
                     onChange={handleChange}
                     name="userName"
                     type="text"
@@ -82,7 +82,7 @@ const Profile = () => {
                 <p className="text-sm text-gray-500">Email Address</p>
                 <p className="text-lg font-medium text-gray-800">
                   <input
-                    value={updatedProfile.email}
+                    value={updatedProfile.email || profile?.email}
                     onChange={handleChange}
                     name="email"
                     type="email"
