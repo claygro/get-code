@@ -3,7 +3,7 @@ import "dotenv/config";
 import authModel from "../models/auth.models.js";
 
 class ProfileControllers {
-  async profile(req, res) {
+  async getProfile(req, res) {
     const token = req.cookies.token;
 
     try {
@@ -22,6 +22,26 @@ class ProfileControllers {
       res
         .status(500)
         .json({ message: `Error in getting profile ${error.message}` });
+    }
+  }
+  //update profile
+  async updateProfile(req, res) {
+    const userId = req.user.id;
+    const { userName, email } = req.body;
+    try {
+      const updatedField = { userName, email };
+      const updatedProfile = await authModel.findByIdAndUpdate(
+        userId,
+        {
+          $set: updatedField,
+        },
+        { returnDocument: "after", runValidators: true },
+      );
+      res.status(200).json({ message: "Successfully updated profile" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: `Failed to update profile ${error.message}` });
     }
   }
 }
