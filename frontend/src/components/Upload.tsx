@@ -18,7 +18,7 @@ const Upload = () => {
   const handleSnipptsSubmit = async () => {
     try {
       setIsUploaded(true);
-      await connection.post("/snippts/upload", uploadSnippits);
+      await connection.post("/snippits/upload", uploadSnippits);
       setIsUploaded(false);
       toast.success("Snippits uploaded successfully");
       setUploadSnippits({

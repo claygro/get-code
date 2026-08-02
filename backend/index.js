@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(express.urlencoded());
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
-app.use("/snippts", snipptsRoutes);
+app.use("/snippits", snipptsRoutes);
 app.get("/", (req, res) => {
   res.send("Backend Running");
 });
