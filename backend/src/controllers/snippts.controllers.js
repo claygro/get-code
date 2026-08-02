@@ -1,3 +1,4 @@
+import authModel from "../models/auth.models.js";
 import UploadModel from "../models/upload.models.js";
 import uploadVector from "../services/upload.services.js";
 
@@ -31,7 +32,7 @@ class SnipptsControllers {
   //read
   async read(req, res) {
     try {
-      const data = await UploadModel.find();
+      const data = await UploadModel.find().populate("userId");
       if (!data) {
         return res.status(404).json({ message: "No snippits found" });
       }

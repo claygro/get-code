@@ -1,4 +1,3 @@
-
 import jwt from "jsonwebtoken";
 
 export const generateAccessToken = (user) => {
@@ -9,7 +8,7 @@ export const generateAccessToken = (user) => {
     },
     process.env.JWT_SECRET_KEY,
     {
-      expiresIn: "7d",
+      expiresIn: "30d",
     },
   );
 };

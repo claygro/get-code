@@ -67,19 +67,28 @@ const Profile: React.FC = () => {
 
   const handleUpdateProfile = async () => {
     try {
-      // If uploading an image via FormData, construct it here:
-      // const formData = new FormData();
-      // Object.entries(updatedProfile).forEach(([key, val]) => formData.append(key, val));
-      // if (imageFile) formData.append("avatar", imageFile);
-      // await connection.put("/profile/updateProfile", formData);
+      const formData = new FormData();
 
-      await connection.put("/profile/updateProfile", {
-        ...updatedProfile,
-        avatar: previewAvatar,
+      formData.append("userName", updatedProfile.userName);
+      formData.append("email", updatedProfile.email);
+      formData.append("github", updatedProfile.github || "");
+      formData.append("linkedIn", updatedProfile.linkedIn || "");
+      formData.append("experience", updatedProfile.experience || "");
+      formData.append("bio", updatedProfile.bio || "");
+
+      if (imageFile) {
+        formData.append("avatar", imageFile);
+      }
+
+      await connection.put("/profile/updateProfile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       await getProfile();
       setIsUpdate(false);
+      setImageFile(null);
     } catch (error: any) {
       console.error(`Failed to update profile: ${error.message}`);
     }

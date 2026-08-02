@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import authModel from "../models/auth.models.js";
 import { generateAccessToken } from "../utils/generateToken.js";
+import { uploadToCloudinary } from "../utils/cloudinaryUploads.utils.js";
 
 class ProfileControllers {
   async getProfile(req, res) {
@@ -22,8 +23,14 @@ class ProfileControllers {
   //update profile
   async updateProfile(req, res) {
     const userId = req.user.id;
-    const { userName, email, avatar, experience, linkedIn, github } = req.body;
+    const { userName, email, experience, linkedIn, github } = req.body;
+
     try {
+      let avatar = "";
+      if (req.file) {
+        const result = await uploadToCloudinary(req.file.buffer);
+        avatar = result.secure_url;
+      }
       const updatedField = {
         userName,
         email,
@@ -45,6 +52,7 @@ class ProfileControllers {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 7 days
       });
       res.status(200).json({ message: "Successfully updated profile" });
     } catch (error) {
