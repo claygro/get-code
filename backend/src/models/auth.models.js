@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   github: String,
   linkedIn: String,
   bio: String,
-  experience: Number,
+  experience: String,
 });
 const authModel = mongoose.model("user", userSchema);
 export default authModel;

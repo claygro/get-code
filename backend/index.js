@@ -1,4 +1,4 @@
-import express from "express";
+import express, { urlencoded } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import "dotenv/config";
@@ -15,6 +15,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded());
 app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
 app.use("/snippts", snipptsRoutes);
