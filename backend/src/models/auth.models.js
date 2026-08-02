@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   avatar: {
-    type: string,
+    type: String,
   },
   userName: {
     type: String,
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   github: String,
   linkedIn: String,
   bio: String,
-  experience: String,
+  experience: Number,
 });
 const authModel = mongoose.model("user", userSchema);
 export default authModel;

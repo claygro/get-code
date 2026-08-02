@@ -3,11 +3,17 @@ import jwt from "jsonwebtoken";
 import argon2 from "argon2";
 import "dotenv/config";
 import { generateAccessToken } from "../utils/generateToken.js";
+import { uploadToCloudinary } from "../utils/cloudinaryUploads.utils.js";
 class AuthControllers {
   async signup(req, res) {
     try {
-      const { userName, email, password } = req.body;
-
+      const { userName, email, password, github, linkedIn, bio, experience } =
+        req.body;
+      let avatar = "";
+      if (req.file) {
+        const result = await uploadToCloudinary(req.file.buffer);
+        avatar = result.secure_url;
+      }
       if (!userName || !email || !password) {
         return res.status(400).json({
           message: "All fields are required.",
@@ -27,9 +33,14 @@ class AuthControllers {
       const hashedPassword = await argon2.hash(password);
 
       const user = await authModel.create({
+        avatar,
         userName,
         email,
         password: hashedPassword,
+        github,
+        linkedIn,
+        bio,
+        experience,
       });
 
       const accessToken = generateAccessToken(user);
@@ -38,7 +49,6 @@ class AuthControllers {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        
       });
 
       res.status(201).json({
