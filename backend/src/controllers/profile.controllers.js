@@ -22,9 +22,16 @@ class ProfileControllers {
   //update profile
   async updateProfile(req, res) {
     const userId = req.user.id;
-    const { userName, email } = req.body;
+    const { userName, email, avatar, experience, linkedIn, github } = req.body;
     try {
-      const updatedField = { userName, email };
+      const updatedField = {
+        userName,
+        email,
+        avatar,
+        linkedIn,
+        experience,
+        github,
+      };
       const updatedProfile = await authModel.findByIdAndUpdate(
         userId,
         {
