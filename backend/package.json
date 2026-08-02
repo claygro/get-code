@@ -12,12 +12,14 @@
   "dependencies": {
     "@qdrant/js-client-rest": "^1.18.0",
     "argon2": "^0.45.1",
+    "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.0",
+    "multer": "^2.2.0",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
