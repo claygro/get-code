@@ -28,5 +28,17 @@ class SnipptsControllers {
         .json({ message: `Failed to upload the code: ${error.message}` });
     }
   }
+  //read
+  async read(req, res) {
+    try {
+      const data = await UploadModel.find();
+      if (!data) {
+        return res.status(404).json({ message: "No snippits found" });
+      }
+      res.status(200).json(data);
+    } catch (error) {
+      console.log(`Failed to show: ${error.message}`);
+    }
+  }
 }
 export default SnipptsControllers;
