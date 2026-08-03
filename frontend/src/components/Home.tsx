@@ -1,12 +1,15 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import { timeAgo } from "../utils/timeAgo";
 import { SnippetsContext } from "../context/Snippets";
 import { useNavigate } from "react-router-dom";
 import SearchSnippets from "./SearchSnippets";
 const Home = () => {
-  const { snippets } = useContext(SnippetsContext);
+  const { snippets, getSnippets } = useContext(SnippetsContext);
   const navigate = useNavigate();
+  useEffect(() => {
+    getSnippets();
+  }, []);
   return (
     <>
       <SearchSnippets />
