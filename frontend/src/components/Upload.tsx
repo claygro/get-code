@@ -1,7 +1,6 @@
 import { useState } from "react";
 import connection from "../config/connection.config";
 import toast, { Toaster } from "react-hot-toast";
-
 const Upload = () => {
   const [uploadSnippets, setUploadSnippets] = useState({
     title: "",
