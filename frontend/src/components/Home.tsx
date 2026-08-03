@@ -2,13 +2,14 @@ import { useContext } from "react";
 
 import { timeAgo } from "../utils/timeAgo";
 import { SnippetsContext } from "../context/Snippets";
-
+import { useNavigate } from "react-router-dom";
+import SearchSnippets from "./SearchSnippets";
 const Home = () => {
   const { snippets } = useContext(SnippetsContext);
-
+  const navigate = useNavigate();
   return (
     <>
-      {/* Changed px-20 to px-4 md:px-20 to give full width on mobile */}
+      <SearchSnippets />
       <div className="w-full space-y-4 px-4 md:px-20 mt-4">
         {snippets
           .slice()
@@ -16,6 +17,7 @@ const Home = () => {
           .map((snippet: any) => (
             <div
               key={snippet._id}
+              onClick={() => navigate(`/layout/snippetsPreview/${snippet._id}`)}
               // Reduced internal padding on mobile (px-4 py-4) and kept original for desktop (md:px-8 md:py-6)
               className="w-full flex items-center justify-between px-4 py-4 md:px-8 md:py-6 bg-white/70 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
             >
