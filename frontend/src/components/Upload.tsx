@@ -1,37 +1,42 @@
 import { useState } from "react";
 import connection from "../config/connection.config";
 import toast, { Toaster } from "react-hot-toast";
+
 const Upload = () => {
-  const [uploadSnippits, setUploadSnippits] = useState({
+  const [uploadSnippets, setUploadSnippets] = useState({
     title: "",
     code: "",
     description: "",
     language: "",
   });
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
-  const handleSnippitsChange = (e: any) => {
-    setUploadSnippits((prev) => ({
+
+  const handleSnippetsChange = (e: any) => {
+    setUploadSnippets((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
-  const handleSnipptsSubmit = async () => {
+
+  const handleSnippetsSubmit = async () => {
     try {
       setIsUploaded(true);
-      await connection.post("/snippits/upload", uploadSnippits);
+      await connection.post("/snippets/upload", uploadSnippets);
       setIsUploaded(false);
-      toast.success("Snippits uploaded successfully");
-      setUploadSnippits({
+      toast.success("Snippets uploaded successfully");
+      setUploadSnippets({
         title: "",
         code: "",
         description: "",
         language: "",
       });
     } catch (error: any) {
-      toast.error("Failed to upload snippits. Please try again later");
-      console.log(`Failed to submit the snippits: ${error.message}}`);
+      setIsUploaded(false); // Reset loading state if the request fails
+      toast.error("Failed to upload snippets. Please try again later");
+      console.log(`Failed to submit the snippets: ${error.message}`); // Removed extra '}'
     }
   };
+
   return (
     <>
       <Toaster position="bottom-right" />
@@ -53,10 +58,10 @@ const Upload = () => {
 
             <input
               required
-              value={uploadSnippits.title}
+              value={uploadSnippets.title}
               type="text"
               name="title"
-              onChange={handleSnippitsChange}
+              onChange={handleSnippetsChange}
               placeholder="Authentication using JWT"
               className="w-full border-b-2 border-black bg-transparent py-3 text-lg outline-none placeholder:text-gray-400 focus:border-gray-600 transition"
             />
@@ -68,10 +73,10 @@ const Upload = () => {
 
             <input
               required
-              value={uploadSnippits.language}
+              value={uploadSnippets.language}
               type="text"
               name="language"
-              onChange={handleSnippitsChange}
+              onChange={handleSnippetsChange}
               placeholder="JavaScript"
               className="w-full border-b-2 border-black bg-transparent py-3 text-lg outline-none placeholder:text-gray-400 focus:border-gray-600 transition"
             />
@@ -85,11 +90,11 @@ const Upload = () => {
 
             <textarea
               required
-              value={uploadSnippits.description}
+              value={uploadSnippets.description}
               rows={3}
               name="description"
-              onChange={handleSnippitsChange}
-              placeholder="Write code here..."
+              onChange={handleSnippetsChange}
+              placeholder="Write description here..."
               className="w-full border-b-2 border-black bg-transparent py-3 resize-none outline-none placeholder:text-gray-400 focus:border-gray-600 transition"
             />
           </div>
@@ -100,10 +105,10 @@ const Upload = () => {
 
             <textarea
               required
-              value={uploadSnippits.code}
+              value={uploadSnippets.code}
               rows={18}
               name="code"
-              onChange={handleSnippitsChange}
+              onChange={handleSnippetsChange}
               placeholder="// Write your code here..."
               className="w-full border border-black p-5 font-mono text-[15px] outline-none resize-none bg-black text-white placeholder:text-gray-500 focus:border-gray-700 transition"
             />
@@ -111,10 +116,11 @@ const Upload = () => {
 
           {/* Button */}
           <button
-            onClick={handleSnipptsSubmit}
-            className="border-2 border-black px-8 py-3 text-lg font-semibold hover:bg-black hover:text-white transition-all duration-300 cursor-pointer"
+            onClick={handleSnippetsSubmit}
+            disabled={isUploaded}
+            className="border-2 border-black px-8 py-3 text-lg font-semibold hover:bg-black hover:text-white transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isUploaded ? "Uploaing....." : "Upload Snippet"}
+            {isUploaded ? "Uploading..." : "Upload Snippet"}
           </button>
         </div>
       </div>

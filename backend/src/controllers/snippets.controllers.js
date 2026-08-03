@@ -2,7 +2,7 @@ import authModel from "../models/auth.models.js";
 import UploadModel from "../models/upload.models.js";
 import uploadVector from "../services/upload.services.js";
 
-class SnipptsControllers {
+class SnippetsControllers {
   async upload(req, res) {
     const userId = req.user.id;
     const { title, code, description, language } = req.body;
@@ -42,4 +42,4 @@ class SnipptsControllers {
     }
   }
 }
-export default SnipptsControllers;
+export default SnippetsControllers;
