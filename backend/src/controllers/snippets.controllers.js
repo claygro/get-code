@@ -57,11 +57,12 @@ class SnippetsControllers {
         with_payload: true,
         limit: 5,
       });
-      const result = data.points.filter(
-        (point) => point.score > 0.75 || point.score > 0.7,
-      );
-      console.log(data.points);
-      res.status(200).json({ result });
+      // const result = data.points.filter(
+      //   (point) => point.score > 0.75 || point.score > 0.7,
+      // );
+      // console.log(data.points);
+      const result = data.points[0];
+      res.status(200).json(result.payload);
     } catch (error) {
       res.status(500).json({ message: `Failed to search: ${error.message}` });
     }
