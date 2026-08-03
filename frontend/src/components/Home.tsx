@@ -12,8 +12,8 @@ const Home = () => {
   }, []);
   return (
     <>
-      <SearchSnippets />
       <div className="w-full space-y-4 px-4 md:px-20 mt-4">
+        <SearchSnippets />
         {snippets
           .slice()
           .reverse()
