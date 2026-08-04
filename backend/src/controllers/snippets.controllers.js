@@ -57,13 +57,19 @@ class SnippetsControllers {
         with_payload: true,
         limit: 5,
       });
-      const result = data.points[0]; //qdrant sort the points according to the score, so highest score are at top, so getting zeroth index points.
-      if (!result) {
-        return res.status(404).json({ message: "No snippets found in qdrant" });
-      }
-      const snippetsData = await UploadModel.findById(
-        result.payload.mongodbId,
-      ).populate("userId");
+
+      const bestScore = data.points[0].score ?? 0;
+      const filteredSnippets = data.points.filter(
+        (point) => point.score >= bestScore * 0.8, //multiplying by 0.8 means Show results that are at least 80% as relevant as the best match
+      );
+
+      const snippetsData = await Promise.all(
+        filteredSnippets.map(async (point) => {
+          return await UploadModel.findById(point.payload.mongodbId).populate(
+            "userId",
+          );
+        }),
+      );
       if (!snippetsData) {
         return res.status(404).json({ message: "No snippets found" });
       }
