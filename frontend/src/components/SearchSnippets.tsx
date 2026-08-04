@@ -1,39 +1,55 @@
-import { useState, type ChangeEvent } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import connection from "../config/connection.config";
-import toast, { Toaster } from "react-hot-toast";
+
 const SearchSnippets = ({ setSearchSnippets }: any) => {
-  const [query, setQuery] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setQuery(e.target.value);
   }
-  async function handleSnippetsSubmit(e: any) {
+
+  // Debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  // Search after debounce
+  async function searchSnippets() {
+    if (debouncedQuery.trim() === "") {
+      setSearchSnippets(null);
+      return;
+    }
+
     try {
-      e.preventDefault();
-      if (query.length <= 0) {
-        toast.error("Please add query first");
-        return;
-      }
       setIsLoading(true);
-      const snippets = await connection.post("/snippets/search", { query });
-      setIsLoading(false);
-      setQuery("");
-      setSearchSnippets(snippets.data);
+
+      const { data } = await connection.post("/snippets/search", {
+        query: debouncedQuery,
+      });
+
+      setSearchSnippets(data);
     } catch (error: any) {
-      console.log(`Failed to search: ${error.message}`);
+      console.log(error.message);
+      setSearchSnippets(null);
+    } finally {
+      setIsLoading(false);
     }
   }
+  useEffect(() => {
+    searchSnippets();
+  }, [debouncedQuery]);
 
   return (
     <>
-      <Toaster position="top-right" />
-      <div className="w-full flex justify-center mt-8 ">
-        <form
-          onSubmit={handleSnippetsSubmit}
-          className="w-full flex justify-between items-center gap-x-10   "
-        >
-          <div className=" bg-white flex-1 rounded-2xl shadow-md border border-blue-100  transition-all duration-300 focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-400">
+      <div className="w-full flex justify-center mt-8">
+        <div className="w-full flex justify-between items-center gap-x-10">
+          <div className="bg-white flex-1 rounded-2xl shadow-md border border-blue-100 transition-all duration-300 focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-400">
             <input
               value={query}
               type="text"
@@ -42,15 +58,14 @@ const SearchSnippets = ({ setSearchSnippets }: any) => {
               className="flex-1 px-6 py-4 w-full text-gray-700 text-lg outline-none placeholder:text-gray-400"
             />
           </div>
-          <div>
-            <button
-              type="submit"
-              className="px-8 py-4 rounded-2xl h-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300"
-            >
-              {isLoading ? "searching..." : "Search"}
-            </button>
-          </div>
-        </form>
+
+          <button
+            disabled
+            className="px-8 py-4 rounded-2xl bg-blue-600 text-white font-semibold"
+          >
+            {isLoading ? "Searching..." : "Search"}
+          </button>
+        </div>
       </div>
     </>
   );
